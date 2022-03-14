@@ -1,0 +1,40 @@
+target
+
+
+### STS ###
+.apt_generated
+.classpath
+.project
+.settings
+
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+
+### NetBeans ###
+/nbproject/private/
+/build/
+/nbbuild/
+/dist/
+/nbdist/
+local_test/
+/.nb-gradle/
+
+### vscode ###
+.vscode
+
+### Build targets ###
+**/*.log
+
+### Test Project, Ignore
+/test/
+/logs/
+
+### for Python
+**/venv
+*.pid
+
