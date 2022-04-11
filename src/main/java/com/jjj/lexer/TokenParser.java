@@ -1,5 +1,6 @@
 package com.jjj.lexer;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 import static com.jjj.lexer.Constants.*;
@@ -12,7 +13,7 @@ public class TokenParser {
     }
 
     private String identifier;
-    private double number;
+    private BigDecimal number;
     private int cursor = ' ';
 
     private final StringBuilder strBuilder = new StringBuilder();
@@ -30,7 +31,7 @@ public class TokenParser {
         return identifier;
     }
 
-    double number() {
+    BigDecimal number() {
         return number;
     }
 
@@ -71,7 +72,7 @@ public class TokenParser {
                 appendBuilder();
                 nextChar();
             } while (Character.isDigit(cursor) || cursor == '.');
-            number = Double.parseDouble(strBuilder.toString());
+            number = new BigDecimal(strBuilder.toString());
             return TOKEN_NUMBER;
         }
         // 忽略注释

@@ -49,8 +49,15 @@ public class ParserTest {
         try (var reader = getResource("/sample-expr.txt");
              var stream = new ReaderCharSource(reader)) {
             var parser = new ExprParser(stream);
-            parser.parse();
+            parser.testParse();
         }
+    }
+
+    @Test
+    public void testArithmetic() {
+        var parser = new ExprParser(new StringCharSource("1+4*6.3/(1.7+5.4)"));
+        var call = parser.parseCallable();
+        System.out.println(call.exec());
     }
 
 }

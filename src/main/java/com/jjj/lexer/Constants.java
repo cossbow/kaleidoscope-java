@@ -24,6 +24,7 @@ public class Constants {
     static {
         Arrays.fill(BINARY_OPERATOR_PRECEDENCE, (short) -1);
         BINARY_OPERATOR_PRECEDENCE['*'] = 40;
+        BINARY_OPERATOR_PRECEDENCE['/'] = 40;
         BINARY_OPERATOR_PRECEDENCE['-'] = 20;
         BINARY_OPERATOR_PRECEDENCE['+'] = 20;
         BINARY_OPERATOR_PRECEDENCE['<'] = 10;

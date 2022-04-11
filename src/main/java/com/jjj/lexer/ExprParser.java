@@ -135,7 +135,7 @@ public class ExprParser {
     }
 
 
-    void parse() {
+    void testParse() {
         getNextToken();
         while (true) {
             switch (currentToken) {
@@ -159,6 +159,11 @@ public class ExprParser {
                     break;
             }
         }
+    }
+
+    Callable parseCallable() {
+        getNextToken();
+        return parseExpression();
     }
 
 }
