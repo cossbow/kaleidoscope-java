@@ -5,7 +5,11 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 
 public class ParserTest {
 
@@ -55,9 +59,22 @@ public class ParserTest {
 
     @Test
     public void testArithmetic() {
-        var parser = new ExprParser(new StringCharSource("1+4*6.3/(1.7+5.4)"));
+        var parser = new ExprParser(new StringCharSource("b+pow(a+4*6.3/(b+1.3),b)"));
         var call = parser.parseCallable();
-        System.out.println(call.exec());
+        var ctx = new ExprContext(Map.of(
+                "a", 4.8,
+                "b", 2.6
+        ), Map.of("pow", new PowFunction()));
+        System.out.println(call.exec(ctx).doubleValue());
     }
 
+    static class PowFunction implements Function<List<BigDecimal>, BigDecimal> {
+        @Override
+        public BigDecimal apply(List<BigDecimal> args) {
+            if (args.size() != 2) {
+                throw new IllegalStateException("pow(a,b) require to arguments");
+            }
+            return new BigDecimal(Math.pow(args.get(0).doubleValue(), args.get(1).doubleValue()));
+        }
+    }
 }

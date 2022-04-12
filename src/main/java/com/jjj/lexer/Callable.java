@@ -4,6 +4,6 @@ import java.math.BigDecimal;
 
 public interface Callable {
 
-    BigDecimal exec();
+    BigDecimal exec(ExprContext ctx);
 
 }

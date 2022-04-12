@@ -1,5 +1,7 @@
 package com.jjj.lexer.ast;
 
+import com.jjj.lexer.ExprContext;
+
 import java.math.BigDecimal;
 
 /**
@@ -13,7 +15,7 @@ public class NumberExprAST extends ExprAST {
     }
 
     @Override
-    public BigDecimal exec() {
+    public BigDecimal exec(ExprContext ctx) {
         return val;
     }
 

@@ -1,5 +1,7 @@
 package com.jjj.lexer.ast;
 
+import com.jjj.lexer.ExprContext;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -17,9 +19,9 @@ public class BinaryExprAST extends ExprAST {
     }
 
     @Override
-    public BigDecimal exec() {
-        var lv = lhs.exec();
-        var rv = rhs.exec();
+    public BigDecimal exec(ExprContext ctx) {
+        var lv = lhs.exec(ctx);
+        var rv = rhs.exec(ctx);
         switch (op) {
             case '+':
                 return lv.add(rv);
