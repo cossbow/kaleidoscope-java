@@ -35,7 +35,7 @@ public class TokenParser {
         return number;
     }
 
-    int nextChar() {
+    private int nextChar() {
         try {
             return cursor = source.next();
         } finally {

@@ -69,14 +69,14 @@ public class ParserTest {
                 var parser = new ExprParser(new ReaderCharSource(r));
                 var call = parser.parseMain();
                 var rand = ThreadLocalRandom.current();
-                var a = new BigDecimal(rand.nextDouble());
-                var b = new BigDecimal(rand.nextDouble());
+                var a = BigDecimal.valueOf(rand.nextDouble(0.5, 1.5));
+                var b = BigDecimal.valueOf(rand.nextDouble(0.5, 1.5));
                 var vars = new HashMap<String, Number>();
                 vars.put("a", a);
                 vars.put("b", b);
                 var bridges = Map.<String, Bridge>of("pow", new PowFunction());
                 var result = call.exec(vars, bridges);
-                Assert.assertEquals(a.add(b), result);
+                Assert.assertEquals(a.multiply(a).add(b.multiply(b)), result);
             }
         }
     }
@@ -87,7 +87,7 @@ public class ParserTest {
             if (args.size() != 2) {
                 throw new IllegalStateException("pow(a,b) require to arguments");
             }
-            return new BigDecimal(Math.pow(args.get(0).doubleValue(), args.get(1).doubleValue()));
+            return BigDecimal.valueOf(Math.pow(args.get(0).doubleValue(), args.get(1).doubleValue()));
         }
     }
 

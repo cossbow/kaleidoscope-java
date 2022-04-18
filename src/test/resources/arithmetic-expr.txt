@@ -1,4 +1,6 @@
+def qua(x)
+    x * x
 def sum(x y)
-    x + y
+    qua(x) + qua(y)
 
 sum(a, b)
