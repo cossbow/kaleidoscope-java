@@ -1,15 +1,17 @@
 package com.jjj.lexer;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class ParserTest {
 
@@ -49,26 +51,37 @@ public class ParserTest {
 
 
     @Test
-    public void testExpr() throws IOException {
-        try (var reader = getResource("/sample-expr.txt");
-             var stream = new ReaderCharSource(reader)) {
-            var parser = new ExprParser(stream);
-            parser.testParse();
-        }
-    }
-
-    @Test
     public void testArithmetic() {
         var parser = new ExprParser(new StringCharSource("b+pow(a+4*6.3/(b+1.3),b)"));
         var call = parser.parseCallable();
         var ctx = new ExprContext(Map.of(
                 "a", 4.8,
                 "b", 2.6
-        ), Map.of("pow", new PowFunction()));
+        ), Map.of("pow", new PowFunction()), Map.of());
         System.out.println(call.exec(ctx).doubleValue());
     }
 
-    static class PowFunction implements Function<List<BigDecimal>, BigDecimal> {
+    @Test
+    public void testArithmetic2() throws IOException {
+        try (var is = ParserTest.class.getResourceAsStream("/arithmetic-expr.txt")) {
+            assert is != null;
+            try (var r = new InputStreamReader(is)) {
+                var parser = new ExprParser(new ReaderCharSource(r));
+                var call = parser.parseMain();
+                var rand = ThreadLocalRandom.current();
+                var a = new BigDecimal(rand.nextDouble());
+                var b = new BigDecimal(rand.nextDouble());
+                var vars = new HashMap<String, Number>();
+                vars.put("a", a);
+                vars.put("b", b);
+                var bridges = Map.<String, Bridge>of("pow", new PowFunction());
+                var result = call.exec(vars, bridges);
+                Assert.assertEquals(a.add(b), result);
+            }
+        }
+    }
+
+    static class PowFunction implements Bridge {
         @Override
         public BigDecimal apply(List<BigDecimal> args) {
             if (args.size() != 2) {
@@ -77,4 +90,5 @@ public class ParserTest {
             return new BigDecimal(Math.pow(args.get(0).doubleValue(), args.get(1).doubleValue()));
         }
     }
+
 }

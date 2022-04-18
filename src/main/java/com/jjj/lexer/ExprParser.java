@@ -2,9 +2,7 @@ package com.jjj.lexer;
 
 import com.jjj.lexer.ast.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static com.jjj.lexer.Constants.*;
 
@@ -135,14 +133,18 @@ public class ExprParser {
     }
 
 
-    void testParse() {
+    MainFunctionAST parseMain() {
+        FunctionAST top = null;
+        Map<String, FunctionAST> functions = new HashMap<>();
         getNextToken();
+        WHILE:
         while (true) {
             switch (currentToken) {
                 case TOKEN_EOF:
-                    return;
+                    break WHILE;
                 case TOKEN_DEF:
-                    parseDefinition();
+                    var f = parseDefinition();
+                    functions.put(f.getProto().getName(), f);
                     System.out.println("parsed a function definition");
                     break;
                 case TOKEN_EXTERN:
@@ -150,15 +152,17 @@ public class ExprParser {
                     System.out.println("parsed a extern");
                     break;
                 default:
-                    var expr = parseTopLevelExpr();
-                    if (null == expr) {
-                        System.err.println("parse top level expr null!");
-                        return;
-                    }
+                    top = parseTopLevelExpr();
                     System.out.println("parsed a top level expr");
                     break;
             }
         }
+
+        if (null == top) {
+            throw new IllegalStateException("main not found");
+        }
+        // has main
+        return new MainFunctionAST(top, functions);
     }
 
     Callable parseCallable() {
